@@ -1,0 +1,16 @@
+---
+# vars file for postfix_install
+installing_path            : /etc/postfix/
+installing_custom_sql_path : /etc/postfix/sql/
+user                       : root
+postfix_user               : postfix
+postfix_password           : postfix_password
+postfix_dbname             : mail
+
+# vars for main.cf
+
+mydomain                   : example.com
+myhostname                 : example.com
+smtpd_tls_cert_file        : /etc/dovecot/ssl/dovecot_crt.pem
+smtpd_tls_key_file         : /etc/dovecot/ssl/dovecot.key
+

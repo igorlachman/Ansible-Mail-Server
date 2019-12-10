@@ -1,0 +1,5 @@
+driver = mysql
+connect = host=localhost dbname={{postfix_dbname}} user={{postfix_user}} password={{postfix_password}}
+default_pass_scheme = {{default_pass_scheme}}
+user_query = SELECT '/var/vmail/%n@%d' AS home, 8 AS uid, 12 AS gid FROM mailbox WHERE username = '%u'
+password_query = SELECT password FROM mailbox WHERE username = '%u'

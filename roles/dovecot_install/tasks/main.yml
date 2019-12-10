@@ -1,0 +1,112 @@
+---
+# tasks file for dovecot_install
+#
+- name         : "|___INSTALL DOVECOT___|"
+  yum          :
+    name       : dovecot
+    state      : latest
+
+- name         : "|___CHECK DOVECOT DIRECTORY___|"
+  stat         :
+    path       : /etc/dovecot
+  register     : exdir
+- debug        :
+    msg        : "DOVECOT DIRECTORY EXIST..."
+  when         : exdir.stat.exists
+- debug        :
+    msg        : "DOVECOT DIRECTORY DIDN'T EXIST"
+  when         : exdir.stat.exists == False
+
+- name         : "|___CHECK BACKUP MAIL_SERVER_BACKUP DIRECTORY___|"
+  stat         :
+    path       : /MAIL_SERVER_BACKUP
+  register     : exdirmail
+- debug        :
+    msg        : "BACKUP POSTFIX DIRECTORY EXIST..."
+  when         : exdirmail.stat.exists
+- debug        :
+    msg        : "BACKUP POSTFIX DIRECTORY DIDN'T EXIST"
+  when         : exdirmail.stat.exists == False
+
+- name         : "|___CREATE BACKUP MAIL_SERVER_BACKUP DIRECTORY___|"
+  shell        :
+    cmd        : mkdir /MAIL_SERVER_BACKUP/
+  when         : exdirmail.stat.exists == False
+
+- name         : "|___CREATE BACKUP DOVECOT___|"
+  shell        :
+    cmd        : cp -Rp /etc/dovecot/ /MAIL_SERVER_BACKUP/
+  when         : exdir.stat.exists == True
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (1)___|"
+  copy         :
+    src        : dovecot.conf
+    dest       : "{{installing_path}}/dovecot.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (2)___|"
+  template     :
+    src        : dovecot-sql.conf.ext.j2
+    dest       : "{{installing_path}}/dovecot-sql.conf.ext"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (3)___|"
+  copy         :
+    src        : 10-ssl.conf
+    dest       : "{{dovecot_conf_path}}/10-ssl.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (4)___|"
+  copy         :
+    src        : 10-auth.conf
+    dest       : "{{dovecot_conf_path}}/10-auth.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (5)___|"
+  copy         :
+    src        : 10-master.conf
+    dest       : "{{dovecot_conf_path}}/10-master.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (6)___|"
+  copy         :
+    src        : 10-mail.conf
+    dest       : "{{dovecot_conf_path}}/10-mail.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (7)___|"
+  copy         :
+    src        : 15-mailboxes.conf
+    dest       : "{{dovecot_conf_path}}/15-mailboxes.conf"
+
+- name         : "|___COPING CUSTOM FILES TO DOVECOT (8)___|"
+  copy         :
+    src        : auth-sql.conf.ext
+    dest       : "{{dovecot_conf_path}}/auth-sql.conf.ext"
+
+
+- name         : "|___CHECK DOVECOT SSL DIRECTORY___|"
+  stat         :
+    path       : /etc/dovecot/ssl/
+  register     : exssldir
+- debug        :
+    msg        : "DOVECOT SSL DIRECTORY EXIST..."
+  when         : exssldir.stat.exists
+- debug        :
+    msg        : "DOVECOT SSL DIRECTORY DIDN'T EXIST"
+  when         : exssldir.stat.exists == False
+
+- name         : "|___CREATE DOVECOT SSL DIRECTORY___|"
+  shell        :
+    cmd        : mkdir /etc/dovecot/ssl/
+  when         : exssldir.stat.exists == False
+
+- name         : "|___COPY SSL FOR MAIL SERVER ___|"
+  copy         :
+    src        : dovecot_crt.pem 
+    dest       : /etc/dovecot/ssl/
+
+- name         : "|___COPY SSL FOR MAIL SERVER ___|"
+  copy         :
+    src        : dovecot.key
+    dest       : /etc/dovecot/ssl/
+
+- name         : "|___RESTART DOVECOT___|"
+  service      : 
+    name         : dovecot
+    state        : restarted 
+    enabled      : yes

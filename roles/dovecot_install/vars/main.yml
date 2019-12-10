@@ -1,0 +1,10 @@
+---
+# vars file for dovecot_install
+
+installing_path            : /etc/dovecot/
+dovecot_conf_path          : /etc/dovecot/conf.d
+user                       : root
+postfix_user               : postfix
+postfix_password           : postfix_password
+postfix_dbname             : mail
+default_pass_scheme        : CRAM-MD5 
