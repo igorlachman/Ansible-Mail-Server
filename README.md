@@ -1,5 +1,4 @@
-# postfix_dovecot
-1. Структура директорий:
+# Структура директорий:
 - файлы конфигурации, в которых нужно сделать изменения:
 dovecot_install/files_need_to_change/ 
 postfix_install/files_need_to_change/
@@ -8,21 +7,19 @@ postfix_install/files_need_to_change/
 dovecot_install/stand_files/
 postfix_install/stand_files/
 
-2. Переменные, которые есть в файлах, которые нужно изменять.
+# Переменные, которые есть в файлах, которые нужно изменять.
 Обозначение переменных - "{{some_vars}}"
 Заменять нужно с удалением спецсимволов.
 Пример:
 Имя базы данных - posfix_mail
 В файле встречам переменную "{{postfix_dbname}}"
 "{{postfix_dbname}}" нужно заменить на posfix_mail
-
 До замены:
 dbname = "{{postfix_dbname}}"
-
 После замены:
 dbname = posfix_mail
 
-3. Пути, где нужно расположить файлы.
+# Пути, где нужно расположить файлы.
 dovecot_install/files_need_to_change/:
   dovecot-sql.conf.ext => /etc/dovecot/dovecot-sql.conf.ext
 
